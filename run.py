@@ -78,7 +78,7 @@ def run(cyto_job, parameters):
         modelsegment = StarDist2D(None, name='2D_versatile_fluo', basedir='/models/')
 
     # ----- load network ----
-    modelname = "/models/pc-cb-2class.keras"
+    modelname = "/models/pc-cb-2class.h5"
     print("Model name: ", modelname)
     model = tf.keras.models.load_model(modelname) #, compile=False) 
     model.compile(optimizer='adam',
