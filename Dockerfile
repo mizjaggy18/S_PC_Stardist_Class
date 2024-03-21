@@ -37,6 +37,8 @@ ADD /models/pancreatic_cancer_detection_model.h5 /models/pancreatic_cancer_detec
 RUN chmod 444 /models/pancreatic_cancer_detection_model.h5
 ADD /models/pc-cb-2class.keras /models/pc-cb-2class.keras
 RUN chmod 444 /models/pc-cb-2class.keras
+ADD /models/pc-cb-2class.h5 /models/pc-cb-2class.h5
+RUN chmod 444 /models/pc-cb-2class.h5
 
 RUN cd /models && \
     mkdir -p 2D_versatile_HE
