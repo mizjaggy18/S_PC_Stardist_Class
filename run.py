@@ -80,7 +80,7 @@ def run(cyto_job, parameters):
     # ----- load network ----
     modelname = "/models/pc-cb-2class.h5"
     print("Model name: ", modelname)
-    model = tf.keras.models.load_model(modelname) #, compile=False) 
+    model = tf.keras.models.load_model(modelname, compile=False) 
     model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
