@@ -289,8 +289,11 @@ def run(cyto_job, parameters):
 
                 is_algo = User().fetch(roi.user).algo
                 roi.dump(dest_pattern=roi_png_filename,mask=True,alpha=not is_algo)
-                    
-                roi.delete() #delete stardist annotation to avoid double annotations
+
+                if stardist_model==0:
+                    pass
+                else:
+                    roi.delete() #delete stardist annotation to avoid double annotations
                 
                 
                 im = cv2.cvtColor(cv2.imread(roi_png_filename),cv2.COLOR_BGR2RGB)
