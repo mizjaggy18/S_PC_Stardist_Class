@@ -19,11 +19,13 @@ from __future__ import print_function, unicode_literals, absolute_import, divisi
 
 import sys
 import numpy as np
+# from pathlib import Path
 import os
 import cytomine
 from shapely.geometry import shape, box, Polygon,Point
 from shapely import wkt
 from glob import glob
+
 from tifffile import imread
 from cytomine import Cytomine, models, CytomineJob
 from cytomine.models import Annotation, AnnotationTerm, AnnotationCollection, ImageInstanceCollection, Job, User, JobData, Project, ImageInstance, Property
@@ -31,6 +33,10 @@ from cytomine.models.ontology import Ontology, OntologyCollection, Term, Relatio
 
 from csbdeep.utils import Path, normalize
 from stardist.models import StarDist2D
+
+import torch
+from torchvision.models import DenseNet
+import openvino as ov
 
 import tensorflow as tf
 from tensorflow import keras
@@ -50,12 +56,12 @@ import logging
 import logging.handlers
 import shutil
 
-__author__ = "Shafiq / WSH Munirah W Ahmad <wshmunirah@gmail.com>"
+__author__ = "WSH Munirah W Ahmad <wshmunirah@gmail.com>"
 __version__ = "1.0.1"
 # Stardist (from Cytomine) followed by Tensorflow classification for Pancreatic Cancer (Date created: 9 Jan 2024)
 
 def run(cyto_job, parameters):
-    logging.info("----- Stardist-PC-class-Tensorflow v%s -----", __version__)
+    logging.info("----- PC-Stardist-class-DenseNet with OpenVino v%s -----", __version__)
     logging.info("Entering run(cyto_job=%s, parameters=%s)", cyto_job, parameters)
 
     job = cyto_job.job
@@ -78,17 +84,31 @@ def run(cyto_job, parameters):
         modelsegment = StarDist2D(None, name='2D_versatile_fluo', basedir='/models/')
 
     # ----- load network ----
-    modelname = "/models/pc-cb-2class.h5"
-    print("Model name: ", modelname)
-    model = tf.keras.models.load_model(modelname, compile=False) 
-    model.compile(optimizer='adam',
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-              metrics=['accuracy'])
-    model.summary()
+    # modelname = "/models/pc-cb-2class.h5"
+    # print("Model name: ", modelname)
+    # model = tf.keras.models.load_model(modelname, compile=False) 
+    # model.compile(optimizer='adam',
+    #           loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+    #           metrics=['accuracy'])
+    # model.summary()
+
+    # Paths where ONNX and OpenVINO IR models will be stored.
+    # ir_path = weights_path.with_suffix(".xml")
+    ir_path = "/models/pc-cb-2class_dn21adam_best_model_100ep.xml"
+
+    # Instantiate OpenVINO Core
+    core = ov.Core()
+
+    # Read model to OpenVINO Runtime
+    #model_ir = core.read_model(model=ir_path)
+
+    # Load model on device
+    compiled_model = core.compile_model(model=ir_path, device_name='CPU')
+    output_layer = compiled_model.output(0)
     
     # ------------------------
 
-    # print(f"Model successfully loaded! Total params: \t{sum([np.prod(p.size()) for p in model.parameters()])}")
+    print("Model successfully loaded!")
     job.update(status=Job.RUNNING, progress=20, statusComment=f"Model successfully loaded!")
 
     #Select images to process
@@ -226,12 +246,13 @@ def run(cyto_job, parameters):
                     except:
                         print("An exception occurred. Proceed with next annotations")
 
-            roi_annotations = AnnotationCollection()
-            roi_annotations.project = project.id
-            roi_annotations.image = id_image
-            roi_annotations.job = job.id
-            roi_annotations.user = user
-            roi_annotations.showWKT = True
+            roi_annotations = AnnotationCollection(
+                terms=[parameters.cytomine_id_cell_term],
+                project=project.id,
+                image=id_image, #conn.parameters.cytomine_id_image
+                showWKT = True,
+                includeAlgo=True, 
+            )
             roi_annotations.fetch()
             # print(roi_annotations)
 
@@ -265,22 +286,21 @@ def run(cyto_job, parameters):
                 roi_path=os.path.join(working_path,str(roi_annotations.project)+'/'+str(roi_annotations.image)+'/')
                 roi_png_filename=os.path.join(roi_path+str(roi.id)+'.png')
 
-
-                roi.dump(dest_pattern=roi_png_filename)
+                is_algo = User().fetch(roi.user).algo
+                roi.dump(dest_pattern=roi_png_filename,mask=True,alpha=not is_algo)
                     
                 roi.delete() #delete stardist annotation to avoid double annotations
                 
                 
-                img = tf.keras.utils.load_img(
-                    roi_png_filename, target_size=(128, 128)
-                )
-                img_array = tf.keras.utils.img_to_array(img)
-                img_array = tf.expand_dims(img_array, 0)
-                predictions = model.predict(img_array)
-                score = tf.nn.softmax(predictions[0])
-                # print(np.argmax(predictions, axis=1))
-
-                pred_labels = np.argmax(predictions, axis=1)
+                im = cv2.cvtColor(cv2.imread(roi_png_filename),cv2.COLOR_BGR2RGB)
+                im = cv2.resize(im,(224,224))
+                arr_out = im.reshape(-1,224,224,3)
+                output = np.zeros((0,num_classes))
+                arr_out = torch.from_numpy(arr_out.transpose(0, 3, 1, 2))                
+                output_batch = compiled_model([arr_out])[output_layer]
+                output = np.append(output, output_batch, axis=0)
+                pred_labels = np.argmax(output, axis=1)
+                # pred_labels=[pred_labels]
                 pred_all.append(pred_labels)
 
                 if pred_labels[0]==0:
