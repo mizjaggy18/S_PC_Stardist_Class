@@ -71,6 +71,7 @@ def run(cyto_job, parameters):
     # modeltype=parameters.cytomine_model
     area_th=parameters.cytomine_area_th
     stardist_model=parameters.stardist_model
+    num_classes = 2
 
     terms = TermCollection().fetch_with_filter("project", parameters.cytomine_id_project)
     job.update(status=Job.RUNNING, progress=1, statusComment="Terms collected...")
