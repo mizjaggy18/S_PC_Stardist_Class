@@ -304,11 +304,11 @@ def run(cyto_job, parameters):
                 pred_all.append(pred_labels)
 
                 if pred_labels[0]==0:
-                    # print("Class 0: Tumor")
+                    # print("Class 0: Normal")
                     id_terms=parameters.cytomine_id_c0_term
                     pred_c0=pred_c0+1
                 elif pred_labels[0]==1:
-                    # print("Class 1: Normal")
+                    # print("Class 1: Tumor")
                     id_terms=parameters.cytomine_id_c1_term
                     pred_c1=pred_c1+1
                 
@@ -334,15 +334,15 @@ def run(cyto_job, parameters):
             print("image prediction:", im_pred)
             pred_total=pred_c0+pred_c1
             print("pred_total:",pred_total)
-            print("pred_tumor:",pred_c0)
-            print("pred_normal:",pred_c1)
+            print("pred_normal:",pred_c0)
+            print("pred_tumorl:",pred_c1)
                   
             end_time=time.time()
             print("Execution time: ",end_time-start_time)
             print("Prediction time: ",end_prediction_time-start_prediction_time)
 
             f.write("\n")
-            f.write("Image ID;Class Prediction;Class 0 (Tumor);Class 1 (Normal);Total Prediction;Execution Time;Prediction Time\n")
+            f.write("Image ID;Class Prediction;Class 0 (Normal);Class 1 (Tumor);Total Prediction;Execution Time;Prediction Time\n")
             f.write("{};{};{};{};{};{};{}\n".format(id_image,im_pred,pred_c0,pred_c1,pred_total,end_time-start_time,end_prediction_time-start_prediction_time))
             
         f.close()
