@@ -71,7 +71,7 @@ def run(cyto_job, parameters):
     # modeltype=parameters.cytomine_model
     area_th=parameters.cytomine_area_th
     stardist_model=parameters.stardist_model
-    num_classes = 2
+    num_classes = 4
 
     terms = TermCollection().fetch_with_filter("project", parameters.cytomine_id_project)
     job.update(status=Job.RUNNING, progress=1, statusComment="Terms collected...")
@@ -95,7 +95,8 @@ def run(cyto_job, parameters):
 
     # Paths where ONNX and OpenVINO IR models will be stored.
     # ir_path = weights_path.with_suffix(".xml")
-    ir_path = "/models/pc-cb-2class_dn21adam_best_model_100ep.xml"
+    # ir_path = "/models/pc-cb-2class_dn21adam_best_model_100ep.xml"
+    ir_path = "/models/pc-cb-4class-2k_dn21adam_best_model_100ep.xml"
 
     # Instantiate OpenVINO Core
     core = ov.Core()
@@ -264,7 +265,9 @@ def run(cyto_job, parameters):
             img_all = []
             pred_all = []
             pred_c0 = 0
-            pred_c1 = 0            
+            pred_c1 = 0
+            pred_c2 = 0
+            pred_c3 = 0
             
             roi_numel=len(roi_annotations)
             x=range(1,roi_numel)
@@ -315,6 +318,14 @@ def run(cyto_job, parameters):
                     # print("Class 1: Tumor")
                     id_terms=parameters.cytomine_id_c1_term
                     pred_c1=pred_c1+1
+                elif pred_labels[0]==2:
+                    # print("Class 1: Tumor")
+                    id_terms=parameters.cytomine_id_c2_term
+                    pred_c2=pred_c2+1
+                elif pred_labels[0]==3:
+                    # print("Class 1: Tumor")
+                    id_terms=parameters.cytomine_id_c3_term
+                    pred_c3=pred_c3+1
                 
                 cytomine_annotations = AnnotationCollection()
                 annotation=roi_geometry
@@ -346,8 +357,8 @@ def run(cyto_job, parameters):
             print("Prediction time: ",end_prediction_time-start_prediction_time)
 
             f.write("\n")
-            f.write("Image ID;Class Prediction;Class 0 (Normal);Class 1 (Tumor);Total Prediction;Execution Time;Prediction Time\n")
-            f.write("{};{};{};{};{};{};{}\n".format(id_image,im_pred,pred_c0,pred_c1,pred_total,end_time-start_time,end_prediction_time-start_prediction_time))
+            f.write("Image ID;Class Prediction;Class 0 (Normal);Class 1 (Inflammatory);Class 2 (Necrotic);Class 3 (Tumor);Total Prediction;Execution Time;Prediction Time\n")
+            f.write("{};{};{};{};{};{};{};{};{}\n".format(id_image,im_pred,pred_c0,pred_c1,pred_c2,pred_c3,pred_total,end_time-start_time,end_prediction_time-start_prediction_time))
             
         f.close()
         
