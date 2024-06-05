@@ -175,6 +175,13 @@ def run(cyto_job, parameters):
                         min_y=roi_geometry.bounds[1]
                         max_x=roi_geometry.bounds[2]
                         max_y=roi_geometry.bounds[3]
+
+                        roi_width=max_x - min_x
+                        roi_height=max_y - min_y
+
+                        print("ROI width = ", roi_width)
+                        print("ROI height = ", roi_height)
+                        
                         #Dump ROI image into local PNG file
                         roi_path=os.path.join(working_path,str(roi_annotations.project)+'/'+str(roi_annotations.image)+'/'+str(roi.id))
                         roi_png_filename=os.path.join(roi_path+'/'+str(roi.id)+'.png')
@@ -185,6 +192,17 @@ def run(cyto_job, parameters):
     
                         #Stardist works with TIFF images without alpha channel, flattening PNG alpha mask to TIFF RGB
                         im=Image.open(roi_png_filename)
+                        print (im.size)
+                        # im2=im.resize((roi_width, roi_height))
+    
+                        im2_W = int(roi_width)
+                        im2_H = int(roi_height)
+    
+                        cb_scalefactor = 0.177154
+                        
+                        im3 = im.resize((int(im2_W * cb_scalefactor), int(im2_H * cb_scalefactor)))
+                        print(im3.size)
+                        im=im3
     
                         bg = Image.new("RGB", im.size, (255,255,255))
                         bg.paste(im,mask=im.split()[3])
