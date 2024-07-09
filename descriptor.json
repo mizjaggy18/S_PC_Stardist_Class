@@ -5,7 +5,7 @@
     "image": "mizjaggy18/s_pc_stardist_class",
     "type": "singularity"
   },
-  "command-line": "echo [CYTOMINE_HOST] [CYTOMINE_PUBLIC_KEY] [CYTOMINE_PRIVATE_KEY] [CYTOMINE_ID_PROJECT] [CYTOMINE_ID_SOFTWARE] [CYTOMINE_ID_IMAGES] [CYTOMINE_ID_ROI_TERM] [CYTOMINE_ID_CELL_TERM] [STARDIST_PROB_T] [STARDIST_NMS_T] [STARDIST_NORM_PERC_LOW] [STARDIST_NORM_PERC_HIGH] [CYTOMINE_ID_C0_TERM] [CYTOMINE_ID_C1_TERM] [CYTOMINE_ID_C2_TERM] [CYTOMINE_ID_C3_TERM] [STARDIST_MODEL] [CYTOMINE_AREA_TH] [LOG_LEVEL]",
+  "command-line": "echo [CYTOMINE_HOST] [CYTOMINE_PUBLIC_KEY] [CYTOMINE_PRIVATE_KEY] [CYTOMINE_ID_PROJECT] [CYTOMINE_ID_SOFTWARE] [CYTOMINE_ID_IMAGES] [CYTOMINE_ID_ROI_TERM] [CYTOMINE_ID_CELL_TERM] [STARDIST_PROB_T] [STARDIST_NMS_T] [STARDIST_NORM_PERC_LOW] [STARDIST_NORM_PERC_HIGH] [CYTOMINE_ID_C0_TERM] [CYTOMINE_ID_C1_TERM] [CYTOMINE_ID_C2_TERM] [STARDIST_MODEL] [CYTOMINE_AREA_TH] [LOG_LEVEL]",
   "inputs": [
     {
       "id": "cytomine_host",
@@ -151,8 +151,8 @@
       "id": "cytomine_id_c0_term",
       "value-key": "[@ID]",
       "command-line-flag": "--@id",
-      "name": "Cytomine class0 (Normal) cell term ID",
-      "description": "Ontology term ID for the cells that will be classified as Class 0 (Normal)",
+      "name": "Cytomine class0 (Others) cell term ID",
+      "description": "Ontology term ID for the cells that will be classified as Class 0 (Others)",
       "optional": false,
       "type": "Domain",
       "uri": "/api/ontology/$currentOntology$/term.json",
@@ -163,8 +163,8 @@
       "id": "cytomine_id_c1_term",
       "value-key": "[@ID]",
       "command-line-flag": "--@id",
-      "name": "Cytomine class1 (Inflammatory) cell term ID",
-      "description": "Ontology term ID for the cells that will be classified as Class 1 (Inflammatory)",
+      "name": "Cytomine class1 (Necrotic) cell term ID",
+      "description": "Ontology term ID for the cells that will be classified as Class 1 (Necrotic)",
       "optional": false,
       "type": "Domain",
       "uri": "/api/ontology/$currentOntology$/term.json",
@@ -176,28 +176,14 @@
       "id": "cytomine_id_c2_term",
       "value-key": "[@ID]",
       "command-line-flag": "--@id",
-      "name": "Cytomine class2 (Necrotic) cell term ID",
-      "description": "Ontology term ID for the cells that will be classified as Class 2 (Necrotic)",
+      "name": "Cytomine class2 (Tumor) cell term ID",
+      "description": "Ontology term ID for the cells that will be classified as Class 2 (Tumor)",
       "optional": false,
       "type": "Domain",
       "uri": "/api/ontology/$currentOntology$/term.json",
       "uri-print-attribute": "name",
       "uri-sort-attribute": "name"
-    },
-	  
-    {
-      "id": "cytomine_id_c3_term",
-      "value-key": "[@ID]",
-      "command-line-flag": "--@id",
-      "name": "Cytomine class3 (Tumor) cell term ID",
-      "description": "Ontology term ID for the cells that will be classified as Class 3 (Tumor)",
-      "optional": false,
-      "type": "Domain",
-      "uri": "/api/ontology/$currentOntology$/term.json",
-      "uri-print-attribute": "name",
-      "uri-sort-attribute": "name"
-    },
-	
+    },	
     {
       "id": "cytomine_area_th",
       "value-key": "[@ID]",
