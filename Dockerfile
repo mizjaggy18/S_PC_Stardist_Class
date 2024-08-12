@@ -45,10 +45,10 @@ RUN pip install tqdm
 # RUN pip install shapely
 
 RUN mkdir -p /models 
-ADD /models/pc-cb-3class_dn21adam_best_model_100ep.bin /models/pc-cb-3class_dn21adam_best_model_100ep.bin
-ADD /models/pc-cb-3class_dn21adam_best_model_100ep.xml /models/pc-cb-3class_dn21adam_best_model_100ep.xml
-RUN chmod 444 /models/pc-cb-3class_dn21adam_best_model_100ep.bin
-RUN chmod 444 /models/pc-cb-3class_dn21adam_best_model_100ep.xml
+ADD /models/pc-cb-3class-v2_dn21adam_best_model_100ep.bin /models/pc-cb-3class-v2_dn21adam_best_model_100ep.bin
+ADD /models/pc-cb-3class-v2_dn21adam_best_model_100ep.xml /models/pc-cb-3class-v2_dn21adam_best_model_100ep.xml
+RUN chmod 444 /models/pc-cb-3class-v2_dn21adam_best_model_100ep.bin
+RUN chmod 444 /models/pc-cb-3class-v2_dn21adam_best_model_100ep.xml
 
 RUN cd /models && \
     mkdir -p 2D_versatile_HE
