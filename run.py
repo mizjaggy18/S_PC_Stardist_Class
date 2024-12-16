@@ -198,11 +198,11 @@ def run(cyto_job, parameters):
                         im2_W = int(roi_width)
                         im2_H = int(roi_height)
     
-                        cb_scalefactor = 0.177154
-                        
-                        im3 = im.resize((int(im2_W * cb_scalefactor), int(im2_H * cb_scalefactor)))
-                        print(im3.size)
-                        im=im3
+                        if calibration_factor < 0.1:
+                            cb_scalefactor = 0.177154
+                            im3 = im.resize((int(im2_W * cb_scalefactor), int(im2_H * cb_scalefactor)))
+                            print(im3.size)
+                            im=im3
     
                         bg = Image.new("RGB", im.size, (255,255,255))
                         bg.paste(im,mask=im.split()[3])
