@@ -50,6 +50,11 @@ ADD /models/pc-cb-3class-v2_dn21adam_best_model_100ep.xml /models/pc-cb-3class-v
 RUN chmod 444 /models/pc-cb-3class-v2_dn21adam_best_model_100ep.bin
 RUN chmod 444 /models/pc-cb-3class-v2_dn21adam_best_model_100ep.xml
 
+ADD /models/pc-cb-2class-v3_dn21adam_best_model_100ep.bin /models/pc-cb-2class-v3_dn21adam_best_model_100ep.bin
+ADD /models/pc-cb-2class-v3_dn21adam_best_model_100ep.xml /models/pc-cb-2class-v3_dn21adam_best_model_100ep.xml
+RUN chmod 444 /models/pc-cb-2class-v3_dn21adam_best_model_100ep.bin
+RUN chmod 444 /models/pc-cb-2class-v3_dn21adam_best_model_100ep.xml
+
 RUN cd /models && \
     mkdir -p 2D_versatile_HE
 ADD /models/2D_versatile_HE/config.json /models/2D_versatile_HE/config.json
