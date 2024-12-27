@@ -71,7 +71,7 @@ def run(cyto_job, parameters):
     # modeltype=parameters.cytomine_model
     area_th=parameters.cytomine_area_th
     stardist_model=parameters.stardist_model
-    num_classes = 3
+    num_classes = 2
 
     terms = TermCollection().fetch_with_filter("project", parameters.cytomine_id_project)
     job.update(status=Job.RUNNING, progress=1, statusComment="Terms collected...")
@@ -96,7 +96,8 @@ def run(cyto_job, parameters):
     # Paths where ONNX and OpenVINO IR models will be stored.
     # ir_path = weights_path.with_suffix(".xml")
     # ir_path = "/models/pc-cb-2class_dn21adam_best_model_100ep.xml"
-    ir_path = "/models/pc-cb-3class-v2_dn21adam_best_model_100ep.xml"
+    # ir_path = "/models/pc-cb-3class-v2_dn21adam_best_model_100ep.xml"
+    ir_path = "/models/pc-cb-2class-v3_dn21adam_best_model_100ep.xml"
 
     # Instantiate OpenVINO Core
     core = ov.Core()
@@ -329,16 +330,17 @@ def run(cyto_job, parameters):
 
                 if pred_labels[0]==0:
                     # print("Class 0: Normal")
-                    id_terms=parameters.cytomine_id_c0_term
+                    # id_terms=parameters.cytomine_id_c0_term
                     pred_c0=pred_c0+1
+                    continue
                 elif pred_labels[0]==1:
                     # print("Class 1: Tumor")
-                    id_terms=parameters.cytomine_id_c1_term
-                    pred_c1=pred_c1+1
-                elif pred_labels[0]==2:
-                    # print("Class 1: Tumor")
                     id_terms=parameters.cytomine_id_c2_term
-                    pred_c2=pred_c2+1
+                    pred_c1=pred_c1+1
+                # elif pred_labels[0]==2:
+                #     # print("Class 1: Tumor")
+                #     id_terms=parameters.cytomine_id_c2_term
+                #     pred_c2=pred_c2+1
                 
                 cytomine_annotations = AnnotationCollection()
                 annotation=roi_geometry
