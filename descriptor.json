@@ -1,6 +1,6 @@
 {
   "name": "S_PC_Stardist_Class",
-  "description": "Segmentation of nuclei using Stardist and Classification of nucleus to Normal, Inflammatory, Necrotic or Tumor (Pancreatic Cancer)",
+  "description": "Segmentation of nuclei using Stardist and Classification of nuclei to Tumor (Pancreatic Cancer)",
   "container-image": {
     "image": "mizjaggy18/s_pc_stardist_class",
     "type": "singularity"
@@ -153,7 +153,7 @@
       "command-line-flag": "--@id",
       "name": "Cytomine class0 (Others) cell term ID",
       "description": "Ontology term ID for the cells that will be classified as Class 0 (Others)",
-      "optional": false,
+      "optional": true,
       "type": "Domain",
       "uri": "/api/ontology/$currentOntology$/term.json",
       "uri-print-attribute": "name",
@@ -165,7 +165,7 @@
       "command-line-flag": "--@id",
       "name": "Cytomine class1 (Necrotic) cell term ID",
       "description": "Ontology term ID for the cells that will be classified as Class 1 (Necrotic)",
-      "optional": false,
+      "optional": true,
       "type": "Domain",
       "uri": "/api/ontology/$currentOntology$/term.json",
       "uri-print-attribute": "name",
