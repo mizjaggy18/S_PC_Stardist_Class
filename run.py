@@ -198,12 +198,11 @@ def run(cyto_job, parameters):
     
                         im2_W = int(roi_width)
                         im2_H = int(roi_height)
-    
-                        if calibration_factor < 0.1:
-                            cb_scalefactor = 0.177154
-                            im3 = im.resize((int(im2_W * cb_scalefactor), int(im2_H * cb_scalefactor)))
-                            print(im3.size)
-                            im=im3
+
+                        cb_scalefactor = calibration_factor / 0.5 # target resolution to use stardist is 0.5. Calibration factor is WSI resolution in micron per pixel
+                        im3 = im.resize((int(im2_W * cb_scalefactor), int(im2_H * cb_scalefactor)))
+                        print(im3.size)
+                        im=im3
     
                         bg = Image.new("RGB", im.size, (255,255,255))
                         bg.paste(im,mask=im.split()[3])
@@ -212,7 +211,7 @@ def run(cyto_job, parameters):
                         X_files = sorted(glob(roi_path+'/'+str(roi.id)+'*.tif'))
                         X = list(map(imread,X_files))
                         n_channel = 3 if X[0].ndim == 3 else X[0].shape[-1]
-                        axis_norm = (0,1)   # normalize channels independently  (0,1,2) normalize channels jointly
+                        axis_norm = (0,1,2)   # normalize channels independently  (0,1,2) normalize channels jointly
                         if n_channel > 1:
                             print("Normalizing image channels %s." % ('jointly' if axis_norm is None or 2 in axis_norm else 'independently'))
     
