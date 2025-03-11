@@ -97,7 +97,7 @@ def run(cyto_job, parameters):
     # ir_path = weights_path.with_suffix(".xml")
     # ir_path = "/models/pc-cb-2class_dn21adam_best_model_100ep.xml"
     # ir_path = "/models/pc-cb-3class-v2_dn21adam_best_model_100ep.xml"
-    ir_path = "/models/pc-cb-2class-v3_dn21adam_best_model_100ep.xml"
+    ir_path = "/models/pc-cb-2class-v7_dn21adam_best_model_100ep.xml"
 
     # Instantiate OpenVINO Core
     core = ov.Core()
