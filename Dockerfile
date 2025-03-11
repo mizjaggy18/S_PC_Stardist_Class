@@ -34,8 +34,8 @@ RUN pip3 install shapely
 RUN pip3 install tifffile
 RUN pip install torch==2.2.0
 RUN pip install torchvision==0.17.0
-RUN pip install openvino==2023.3.0
-RUN pip install openvino-telemetry==2023.2.1
+RUN pip install openvino==2024.3.0
+RUN pip install openvino-telemetry==2024.1.0
 # RUN pip install opencv-python-headless==4.9.0.80
 # RUN pip install opencv-contrib-python-headless==4.9.0.80
 RUN pip install opencv-python-headless==4.5.1.48
